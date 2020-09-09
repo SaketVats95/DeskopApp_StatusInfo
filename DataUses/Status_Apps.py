@@ -1,26 +1,28 @@
 import JIO_FI_Status as JIO_Status
-
 import time
+import threading
 
 #Autor : Saket Vats
-
-jio_req = JIO_Status.Jio_DataInfo()
-siteStatus = jio_req.sendRequest()
 
 batteryQuantity = 'lDashBatteryQuantity';
 chargeStatus = 'lDashChargeStatus';
 upLoadCurrentDataRate = 'lulCurrentDataRate';
 downloadCurrentDataRate = 'ldlCurrentDataRate';
+jio_req = JIO_Status.Jio_DataInfo()
 
-allData = []
-if siteStatus:
-    validIds = [batteryQuantity, chargeStatus, upLoadCurrentDataRate, downloadCurrentDataRate]
-    if jio_req.ifResponseOk():
-        allData = jio_req.getSelectedData(validIds)
+def GetLatestStatus(ex):
+    allData = []
+    siteStatus = jio_req.sendRequest()
+    if siteStatus:
+        validIds = [batteryQuantity, chargeStatus, upLoadCurrentDataRate, downloadCurrentDataRate]
+        if jio_req.ifResponseOk():
+            allData = jio_req.getSelectedData(validIds)
+            ex.updateStatus(batStatus = allData[chargeStatus], batper = allData[batteryQuantity],
+            dlSpd = allData[upLoadCurrentDataRate], ulSpd = allData[downloadCurrentDataRate] )
 
-print(allData)
-print(allData[batteryQuantity])
-
+def printit():
+    threading.Timer(10.0, printit).start()
+    GetLatestStatus(ex)
 
 import sys
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QPushButton, QAction, QLineEdit, QMessageBox, QLabel
@@ -99,7 +101,15 @@ class App(QMainWindow):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = App()
-    ex.updateStatus(batStatus = allData[chargeStatus], batper = allData[batteryQuantity],
-    dlSpd = allData[upLoadCurrentDataRate], ulSpd = allData[downloadCurrentDataRate] )
+    #ex.updateStatus(batStatus = allData[chargeStatus], batper = allData[batteryQuantity],
+    #dlSpd = allData[upLoadCurrentDataRate], ulSpd = allData[downloadCurrentDataRate] )
+    #GetLatestStatus(ex)
+    printit()
     sys.exit(app.exec_())
+    
+
+
+
+
+  #print "Hello, World!"
 
