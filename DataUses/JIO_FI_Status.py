@@ -8,7 +8,11 @@ class Jio_DataInfo():
     
     def sendRequest(self):
         #url = 
-        self.response = requests.get(self.url)
+        try:
+            self.response = requests.get(self.url)
+            return True
+        except Exception:
+            return False
     
     def ifResponseOk(self):
         return True if self.response.status_code == 200 else False
@@ -17,13 +21,13 @@ class Jio_DataInfo():
         self.soup_jio_ResData = BeautifulSoup(self.response.text, 'html.parser') 
     
     def getSelectedData(self, validIdList):
-        validData = []
+        validData = dict()
         if self.ifResponseOk():
             self.createBeautifulSoupObj()
             labels = self.soup_jio_ResData.findAll('label')
             for label in labels:
                 if label.has_attr('id') and label['id'] in validIdList:
-                    tempData = (label['id'], label.decode_contents())
-                    validData.append(tempData)
+                    #tempData = (label['id'], label.decode_contents())
+                    validData[label['id']] =label.decode_contents()
         
         return validData
