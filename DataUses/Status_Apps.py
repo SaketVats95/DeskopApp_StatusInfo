@@ -18,7 +18,7 @@ def GetLatestStatus(ex):
         if jio_req.ifResponseOk():
             allData = jio_req.getSelectedData(validIds)
             ex.updateStatus(batStatus = allData[chargeStatus], batper = allData[batteryQuantity],
-            dlSpd = allData[upLoadCurrentDataRate], ulSpd = allData[downloadCurrentDataRate] )
+            dlSpd = allData[downloadCurrentDataRate], ulSpd = allData[upLoadCurrentDataRate] )
 
 def printit():
     threading.Timer(10.0, printit).start()
