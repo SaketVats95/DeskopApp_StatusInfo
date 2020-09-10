@@ -33,7 +33,7 @@ class App(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.title = 'PyQt5 textbox - pythonspot.com'
+        self.title = 'JioFi Status'
         self.left = 10
         self.top = 10
         self.width = 400
